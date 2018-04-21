@@ -1,0 +1,61 @@
+All type:
+	Integer(Unsigned)
+	String
+	Boolean
+	Deck
+	Card(Two fields): Suit(Integer), Rank(Integer)
+	Player(Four fields): Cards(Card[]), Name(String), Point(Integer), Flag(Boolean)
+	Card[];
+	Player[];
+
+Pre-defined variables:
+	Game: Players(Player[]), Deck(Deck), Game(Integer)
+	Screen: Players(Player[]), CurID(Integer), Screen(String)
+	Valid: Players(Player[]), CurID(Integer), CurPlayCards(Card[]), PrevID(Integer), PrevPlayCards(Card[]), Deck(Deck), Valid(Boolean)
+	WinnerID: Players(Player[]), CurID(Integer), PrevID(Integer), PrevPlayCards(Card[]), Deck(Deck), WinnerID(Integer)
+	NextID: Players(Player[]), CurID(Integer), PrevID(Integer), PrevPlayCards(Card[]), Deck(Deck), NextID(Integer)
+
+User-defined variables:
+	Static scoping, identical to Java
+	Can define Integer variable only through shift statement and for(within scope)
+	Cannot hide pre-defined variables
+
+Type checking:
+	Shift Statement checking:
+		Integer << Integer, String << String, Boolean << Boolean, Card[] << Deck
+	For Statement checking:
+		For Integer(user defined) From Integer To Integer
+	While Statement checking:
+		While Boolean
+	If Statement checking:
+		If Boolean Then
+	Expression checking:
+		+-*/%: Integer
+		> >= < <= = <>: Boolean
+		Not And Or: Boolean
+
+Code generation:
+	All subscript indices need to minus 1
+	User defined variables start with "i_"
+	Return variables start with "_"
+
+	Players[x].Cards -> hands[x-1]
+	Players[x].Name -> getPlayerChar(x-1)
+	Players[x].Point -> points[x-1]
+	Players[x].Flag -> flags[x-1]
+	Cards[x] -> (Cards).get(x-1)
+	x.Suit -> x.getSuit()
+	x.Rank -> x.getRank()
+	CurID -> curPlayerID + 1
+	PrevID -> prevPlay.playerID + 1
+	Deck -> deck
+
+	|Players| -> numPlayers
+	|Cards| -> Cards.size()
+
+	Shuffle -> deck.shuffle()
+	Screen << "x" -> _Screen += "x"
+
+	When x is of type Card[]:
+		|x| -> x.cards.size()
+		x << Deck -> card = deck.drawCard(); x.addCard(card);

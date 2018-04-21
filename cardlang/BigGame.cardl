@@ -1,0 +1,42 @@
+Game BigGame {
+    Shuffle
+    id << 1
+    For i From 1 To 52 {
+        Players[id].Cards << Deck
+        id << id + 1
+        If id > |Players| Then {
+            id << 1
+        }
+    }
+    Game << 52 / |Players| + 1
+}
+
+Screen {}
+
+Valid {
+    If |CurPlayCards| <> 1 Then {
+        Valid << False
+    } Else {
+        If PrevID = 0 Or PrevID = CurID Or CurPlayCards[1].Rank = 1 Then {
+            Valid << True
+        } Else {
+            If PrevPlayCards[1].Rank = 1 Then {
+                Valid << False
+            } Else {
+                Valid << CurPlayCards[1].Rank > PrevPlayCards[1].Rank
+            }
+        }
+    }
+}
+
+WinnerID {
+    For i From 1 To |Players| {
+        If |Players[i].Cards| = 0 Then {
+            WinnerID << i
+        }
+    }
+}
+
+NextID {
+    NextID << CurID % |Players| + 1
+}
