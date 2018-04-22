@@ -58,4 +58,4 @@ Code generation:
 
 	When x is of type Card[]:
 		|x| -> x.cards.size()
-		x << Deck -> card = deck.drawCard(); x.addCard(card);
+		x << Deck -> card = deck.drawCard(); if (card != null) x.addCard(card);
