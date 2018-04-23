@@ -42,7 +42,7 @@ public abstract class Token extends Node
     @Override
     public String toString()
     {
-        return this.text + " ";
+        return this.text;
     }
 
     @Override
