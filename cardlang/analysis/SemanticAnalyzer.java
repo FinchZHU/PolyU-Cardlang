@@ -31,6 +31,7 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     ArrayList<String> preObj;
     ArrayList<ArrayList<String>> preObjStack;
     StringBuilder preSequence;
+
     // counts the layer of loops the current line is in, including both for and while loops
     int loopLayerCount = 0;
 
@@ -48,6 +49,7 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     // ------ Helper method ------
 
 
+
     public String getPreSequence() {
         preSequence = new StringBuilder();
         for (int i = 0; i < preObjStack.get(0).size(); i++) {
@@ -57,6 +59,7 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
         preSequence = new StringBuilder();
         return res;
     }
+
 
     // a method that receives a string, and throw an illegalArgumentException with the string as error information.
     public void reportError(String errmsg) {
@@ -75,7 +78,9 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
 
     // set the data type of a node.
     public void setNodeDataType(Node node, char type) {
+
         System.out.println("Node: [" + node.toString() + "] of [" + node.getClass() + "] has been set to type " + type);
+
         nodetype.put(node, type);
     }
 
@@ -182,12 +187,14 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     // Game: Players(Player[]), Deck(Deck), Game(Integer)
     @Override
     public void inAGame(AGame node) {
+
         System.out.println("---------------------\nEntering method Game... \n");
         currentMethodBranch = BRANCH_GAME;
         preSequence = new StringBuilder();
         preObj = new ArrayList<>();
         preObjStack = new ArrayList<>();
         preObjStack.add(preObj);
+
         symtable.put(BRANCH_GAME, new Hashtable<String, Character>());
         symtable.get(BRANCH_GAME).put("Deck", TYPE_DECK);
         symtable.get(BRANCH_GAME).put("Game", TYPE_INTEGER);
@@ -206,12 +213,14 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     @Override
     //	Screen: Players(Player[]), CurID(Integer), Screen(String)
     public void inAScreen(AScreen node) {
+
         System.out.println("---------------------\nEntering method Screen... \n");
         currentMethodBranch = BRANCH_SCREEN;
         preSequence = new StringBuilder();
         preObj = new ArrayList<>();
         preObjStack = new ArrayList<>();
         preObjStack.add(preObj);
+
         symtable.put(BRANCH_SCREEN, new Hashtable<String, Character>());
         symtable.get(BRANCH_SCREEN).put("CurID", TYPE_INTEGER);
         symtable.get(BRANCH_SCREEN).put("Screen", TYPE_STRING);
@@ -229,12 +238,14 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     @Override
     //	Valid: Players(Player[]), CurID(Integer), CurPlayCards(Card[]), PrevID(Integer), PrevPlayCards(Card[]), Deck(Deck), Valid(Boolean)
     public void inAValid(AValid node) {
+
         System.out.println("---------------------\nEntering method Valid... \n");
         currentMethodBranch = BRANCH_VALID;
         preSequence = new StringBuilder();
         preObj = new ArrayList<>();
         preObjStack = new ArrayList<>();
         preObjStack.add(preObj);
+
         symtable.put(BRANCH_VALID, new Hashtable<String, Character>());
         symtable.get(BRANCH_VALID).put("CurID", TYPE_INTEGER);
         symtable.get(BRANCH_VALID).put("PrevID", TYPE_INTEGER);
@@ -263,12 +274,14 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     //	WinnerID: Players(Player[]), CurID(Integer), PrevID(Integer), PrevPlayCards(Card[]), Deck(Deck), WinnerID(Integer)
     @Override
     public void inAWinnerid(AWinnerid node) {
+
         System.out.println("---------------------\nEntering method WinnerID... \n");
         currentMethodBranch = BRANCH_WINNERID;
         preSequence = new StringBuilder();
         preObj = new ArrayList<>();
         preObjStack = new ArrayList<>();
         preObjStack.add(preObj);
+
         symtable.put(BRANCH_WINNERID, new Hashtable<String, Character>());
         symtable.get(BRANCH_WINNERID).put("CurID", TYPE_INTEGER);
         symtable.get(BRANCH_WINNERID).put("PrevID", TYPE_INTEGER);
@@ -293,11 +306,13 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     @Override
     public void inANextid(ANextid node) {
         currentMethodBranch = BRANCH_NEXTID;
+
         System.out.println("---------------------\nEntering method NextID... \n");
         preSequence = new StringBuilder();
         preObj = new ArrayList<>();
         preObjStack = new ArrayList<>();
         preObjStack.add(preObj);
+
         symtable.put(BRANCH_NEXTID, new Hashtable<String, Character>());
         symtable.get(BRANCH_NEXTID).put("CurID", TYPE_INTEGER);
         symtable.get(BRANCH_NEXTID).put("PrevID", TYPE_INTEGER);
@@ -345,6 +360,7 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     }
 
 
+
     @Override
     public void inAShuffleStmt(AShuffleStmt node) {
         System.out.println("\nStatement: " + node.toString() + "\n");
@@ -369,6 +385,7 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     public void inAWhileStmt(AWhileStmt node) {
         System.out.println("\nStatement: " + node.toString() + "\n");
     }
+
 
     // when exiting a base shift:
     @Override
@@ -397,7 +414,9 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
 
             // if the assigned value is not integer and the object is un-defined, report error since user cannot define other types of variables
             else {
+
                 reportError("invalid base shift: expression node undefined type: " + node.getExpr().toString() + ": " + getNodeDataType(node.getExpr()));
+
             }
         }
 
@@ -498,7 +517,9 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
         }
 
         // at the end of the loop, delete the for variable from hash table
+
         symtable.get(currentMethodBranch).remove(node.getId().toString());
+
 
         // and reduce the layer count
         loopLayerCount--;
@@ -544,13 +565,16 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
         if (!(loopLayerCount >= 0)) {
             reportError("invalid break statement: not enough loop layer count: " + loopLayerCount);
         }
+
         System.out.println("\nStatement: " + node.toString() + "\n");
+
     }
     @Override
     public void outAContinueStmt(AContinueStmt node) {
         if (!(loopLayerCount >= 0)) {
             reportError("invalid continue statement: not enough loop layer count: " + loopLayerCount);
         }
+
         System.out.println("\nStatement: " + node.toString() + "\n");
     }
 
@@ -560,21 +584,25 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
         preObjStack.add(0, new ArrayList<>());
     }
 
+
     // the expression type passing are trivial.
     @Override
     public void outABaseExpr(ABaseExpr node) {
         passUpDataType(node, node.getFactor());
+
         preObjStack.remove(0);
     }
 
     @Override
     public void inAStringExpr(AStringExpr node) {
         preObjStack.add(0, new ArrayList<>());
+
     }
 
     @Override
     public void outAStringExpr(AStringExpr node) {
         setNodeDataType(node, TYPE_STRING);
+
         preObjStack.remove(0);
     }
 
@@ -583,6 +611,7 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
         preObjStack.add(0, new ArrayList<>());
     }
 
+
     // and and or expressions must be applied to boolean values
     @Override
     public void outAAndExpr(AAndExpr node) {
@@ -590,6 +619,7 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
             reportError("invalid and expression: " + node.getExpr() + ": " + getNodeDataType(node.getExpr()) + " and " + node.getFactor() + ": " + getNodeDataType(node.getFactor()));
         }
         setNodeDataType(node, TYPE_BOOLEAN);
+
         preObjStack.remove(0);
     }
 
@@ -598,13 +628,16 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
         preObjStack.add(0, new ArrayList<>());
     }
 
+
     @Override
     public void outAOrExpr(AOrExpr node) {
         if (getNodeDataType(node.getExpr()) != TYPE_BOOLEAN || getNodeDataType(node.getFactor()) != TYPE_BOOLEAN) {
             reportError("invalid or expression: " + node.getExpr() + ": " + getNodeDataType(node.getExpr()) + " or " + node.getFactor() + ": " + getNodeDataType(node.getFactor()));
         }
         setNodeDataType(node, TYPE_BOOLEAN);
+
         preObjStack.remove(0);
+
     }
 
     // a base factor's type is determined by the comp expression's type
@@ -680,35 +713,45 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     // the mathematic operations must be applied to two integers
     @Override
     public void outAPlusNumexpr(APlusNumexpr node) {
+
         if (getNodeDataType(node.getNumexpr()) != TYPE_INTEGER || getNodeDataType(node.getVal()) != TYPE_INTEGER) {
+
             reportError("invalid plus num expression: " + node.getNumexpr() + ": " + getNodeDataType(node.getNumexpr()) + " + " + node.getVal() + ": " + getNodeDataType(node.getVal()));
         }
         setNodeDataType(node, TYPE_INTEGER);
     }
     @Override
     public void outAMinusNumexpr(AMinusNumexpr node) {
+
         if (getNodeDataType(node.getNumexpr()) != TYPE_INTEGER || getNodeDataType(node.getVal()) != TYPE_INTEGER) {
+
             reportError("invalid plus num expression: " + node.getNumexpr() + ": " + getNodeDataType(node.getNumexpr()) + " - " + node.getVal() + ": " + getNodeDataType(node.getVal()));
         }
         setNodeDataType(node, TYPE_INTEGER);
     }
     @Override
     public void outAMultiNumexpr(AMultiNumexpr node) {
+
         if (getNodeDataType(node.getNumexpr()) != TYPE_INTEGER || getNodeDataType(node.getVal()) != TYPE_INTEGER) {
+
             reportError("invalid plus num expression: " + node.getNumexpr() + ": " + getNodeDataType(node.getNumexpr()) + " * " + node.getVal() + ": " + getNodeDataType(node.getVal()));
         }
         setNodeDataType(node, TYPE_INTEGER);
     }
     @Override
     public void outADivNumexpr(ADivNumexpr node) {
+
         if (getNodeDataType(node.getNumexpr()) != TYPE_INTEGER || getNodeDataType(node.getVal()) != TYPE_INTEGER) {
+
             reportError("invalid plus num expression: " + node.getNumexpr() + ": " + getNodeDataType(node.getNumexpr()) + " / " + node.getVal() + ": " + getNodeDataType(node.getVal()));
         }
         setNodeDataType(node, TYPE_INTEGER);
     }
     @Override
     public void outAModNumexpr(AModNumexpr node) {
+
         if (getNodeDataType(node.getNumexpr()) != TYPE_INTEGER || getNodeDataType(node.getVal()) != TYPE_INTEGER) {
+
             reportError("invalid plus num expression: " + node.getNumexpr() + ": " + getNodeDataType(node.getNumexpr()) + " % " + node.getVal() + ": " + getNodeDataType(node.getVal()));
         }
         setNodeDataType(node, TYPE_INTEGER);
@@ -749,6 +792,7 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     }
 
     @Override
+
     public void inAFieldObj(AFieldObj node) {
         preObjStack.get(0).add(node.getId().toString());
     }
@@ -758,6 +802,7 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
         String temp = preObjStack.get(0).remove(preObjStack.get(0).size() - 1);
         setNodeDataType(node, getIDType(removeArrIndex(getPreSequence() + node.getId().toString() + "." + node.getObj().toString())));
         // System.out.println("\n\n" + removeArrIndex(getPreSequence() + node.getId().toString() + "." + node.getObj().toString()) + "\n\n");
+
 
     }
 
@@ -794,6 +839,7 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
     // the thing before subscript must be an array
     @Override
     public void outASubscriptId(ASubscriptId node) {
+
         String temp = preObjStack.get(0).remove(preObjStack.get(0).size() - 1);
         if (getIDType(removeArrIndex(getPreSequence() + node.getId().toString())) != TYPE_CARD_ARR && getIDType(removeArrIndex(getPreSequence() + node.getId().toString())) != TYPE_PLAYER_ARR) {
             reportError("invalid subscript: not an array: " + removeArrIndex(getPreSequence() + node.getId().toString()) + ": " + getIDType(removeArrIndex(getPreSequence() + node.getId().toString())));
@@ -810,13 +856,16 @@ public class SemanticAnalyzer extends DepthFirstAdapter {
             setNodeDataType(node, TYPE_PLAYER);
         }
         preObjStack.get(0).add(temp);
+
     }
 
     // the thing between bars must be an array
     @Override
     public void outALengthId(ALengthId node) {
+
         if (getIDType(removeArrIndex(node.getObj().toString())) != TYPE_CARD_ARR && getIDType(removeArrIndex(node.getObj().toString())) != TYPE_PLAYER_ARR) {
             reportError("invalid length: not an array: " + removeArrIndex(node.getObj().toString()) + ": " + getIDType(removeArrIndex(node.getObj().toString())));
+
         }
         setNodeDataType(node, TYPE_INTEGER);
     }
