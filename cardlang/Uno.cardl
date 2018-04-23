@@ -1,0 +1,38 @@
+Game Uno {
+    Shuffle
+    For i From 1 To |Players| {
+        For j From 1 To 10 {
+            Players[i].Cards << Deck
+        }
+    }
+    Players[i].Flag << True
+    Game << 20
+}
+
+Screen {}
+
+Valid {
+    If |CurPlayCards| = 1 Then {
+        If CurPlayCards[1].Suit = PrevPlayCards[1].Suit Or CurPlayCards[1].Rank = PrevPlayCards[1].Rank Then {
+            Valid << True
+            Players[CurID].Flag << False
+        }
+    }
+}
+
+WinnerID {
+    For i From 1 To |Players| {
+        If |Players[i].Cards| = 0 Then {
+            WinnerID << i
+        }
+    }
+}
+
+NextID {
+    If Players[CurID].Flag Then {
+        Players[CurID].Flag << False
+        Players[CurID].Cards << Deck
+    }
+    NextID = CurID % |Players| + 1
+    Players[NextID] << True
+}
